@@ -1,0 +1,92 @@
+#include <iostream>
+using namespace std;
+
+
+// this function is creating a chess board
+void chessBoard(int size, bool queens){
+cout << "+";
+for (int col = 0; col < size; col++){
+  cout << "--+";
+}
+cout << endl;
+for (int row = 0; row < size; row++){
+  cout <<"|";
+    for (int col = 0; col < size; col++){
+      if (queens[row][col]){
+      cout << "QQ|";
+      }
+        else{
+          cout << "  |";
+        }
+}
+    cout << endl;
+    cout << "+";
+    for (int col = 0; col < size; col++){
+      cout << "--+";
+    }
+    cout << endl;
+  }
+ }
+
+bool checkMove(bool queens, int size, int row, int col){
+  for (int i = 0; i < size; i++){
+    if (queens[i][col] || queens[row][i]){
+      return false;
+    }
+  }
+  //parallel for loop
+  for (int i = col, j = row; (i >= 0 && j >= 0); i--, j--){
+    if (queens[j][i]){
+      return false;
+    }
+  }
+  for (int i = col, j = row; (i >= 0 && j < size); i--, j++){
+    if (queens[j][i]){
+      return false;
+    }
+  }
+
+  return true;
+}
+
+bool placeQueen(bool queens, int size, int col){
+  if (col == size){
+    return true;
+  }
+
+  for (int row = 0; row < size; row++){
+    if (checkMove(queens, size, row, col))
+    {
+      cout << "Ok!" << row << endl;
+      queens[row][col] = true;
+
+      chessBoard(size, queens);
+      if (placeQueen(queens, size , col + 1))
+        return true;
+
+        queens[row][col] = false;
+   }
+ }
+  return false;
+}
+
+int main() {
+
+  int size = 5;
+  bool queens = new bool* [size];
+
+  for (int i = 0; i < size; i++){
+      queens[i] = new bool[size];
+  }
+
+  chessBoard(size ,queens);
+  placeQueen(queens, size, 0);
+
+   for (int i = 0; i < size; i++){
+      delete [] queens[i];
+  }
+
+  delete [] queens;
+
+  return 0;
+}
